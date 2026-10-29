@@ -21,16 +21,12 @@ from ml_engine.personal_hybrid import PersonalHybridRecommender
 
 router = APIRouter(prefix="/recommendations", tags=["Recommendations"])
 
-# Singleton recommender instances
 popularity_rec = PopularityRecommender()
 collaborative_rec = CollaborativeRecommender()
 content_rec = ContentBasedRecommender()
 hybrid_rec = PersonalHybridRecommender()
 
 
-# =============================================================================
-# 1. TOP-10 POPULAR MOVIES
-# =============================================================================
 @router.get(
     "/popular",
     response_model=RecommendationResponse,
@@ -51,9 +47,6 @@ def get_popular_movies(
     )
 
 
-# =============================================================================
-# 2. COLLABORATIVE FILTERING (User-based & Item-based)
-# =============================================================================
 @router.get(
     "/collaborative/user-based",
     response_model=RecommendationResponse,
@@ -129,9 +122,6 @@ def get_item_based_user_recommendations(
     )
 
 
-# =============================================================================
-# 3. CONTENT-BASED RECOMMENDATIONS
-# =============================================================================
 @router.get(
     "/content-based",
     response_model=RecommendationResponse,
@@ -181,10 +171,6 @@ def get_content_based_user_recommendations(
         recommendations=[MovieResponse(**r) for r in results]
     )
 
-
-# =============================================================================
-# 4. PERSONAL RECOMMENDATIONS FOR USER
-# =============================================================================
 @router.get(
     "/personal",
     response_model=RecommendationResponse,

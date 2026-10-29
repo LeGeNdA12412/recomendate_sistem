@@ -29,7 +29,6 @@ def render_dataset_overview_tab(summary: dict):
     col_chart, col_info = st.columns([1.5, 2.5])
 
     with col_chart:
-        # Столбчатая диаграмма структуры матрицы
         df_matrix = pd.DataFrame([
             {"Параметр": "Разреженность", "Процент": sparsity_pct, "Цвет": "#ef4444"},
             {"Параметр": "Заполненность", "Процент": density_pct, "Цвет": "#10b981"}
@@ -110,7 +109,6 @@ def render_distribution_charts(rating_dist: list, genre_dist: list):
         if genre_dist:
             df_g = pd.DataFrame(genre_dist).sort_values("count", ascending=True)
 
-            # Горизонтальная столбчатая диаграмма жанров
             fig_g = go.Figure(go.Bar(
                 x=df_g["count"],
                 y=df_g["genre"],

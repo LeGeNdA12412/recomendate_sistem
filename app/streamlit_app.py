@@ -92,10 +92,6 @@ def call_api(endpoint: str, method: str = "GET", params: dict = None, json_data:
     except Exception as e:
         return None, str(e)
 
-
-# -------------------------------------------------------------
-# 1. ВЕРХНИЙ ХОТБАР И ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ (БЕЗ СТИКЕРОВ)
-# -------------------------------------------------------------
 api_status, _ = call_api("/")
 is_online = api_status is not None
 
@@ -143,10 +139,6 @@ with top_col_user:
                 '<span class="status-badge-offline">API Оффлайн</span></div>',
                 unsafe_allow_html=True
             )
-
-# -------------------------------------------------------------
-# 2. ВЕРХНЕЕ МЕНЮ РАЗДЕЛОВ (ХОТБАР НАВЕРХУ)
-# -------------------------------------------------------------
 NAV_OPTIONS = [
     "Топ популярных",
     "Коллаборативная фильтрация",
@@ -169,10 +161,6 @@ if not nav_choice:
 
 st.markdown("<hr style='margin: 0.8rem 0 1.5rem 0; border-color: #374151;'>", unsafe_allow_html=True)
 
-
-# -------------------------------------------------------------
-# РАЗДЕЛ 1: ТОП ПОПУЛЯРНЫХ ФИЛЬМОВ
-# -------------------------------------------------------------
 if nav_choice == "Топ популярных":
     st.markdown('<div class="page-title">Топ популярных фильмов</div>', unsafe_allow_html=True)
     st.markdown(
@@ -209,10 +197,6 @@ if nav_choice == "Топ популярных":
             for movie in recs:
                 render_movie_card(movie, rank=movie.get("rank"), show_score="weighted")
 
-
-# -------------------------------------------------------------
-# РАЗДЕЛ 2: КОЛЛАБОРАТИВНАЯ ФИЛЬТРАЦИЯ
-# -------------------------------------------------------------
 elif nav_choice == "Коллаборативная фильтрация":
     st.markdown('<div class="page-title">Коллаборативная фильтрация</div>', unsafe_allow_html=True)
     st.markdown(
@@ -293,9 +277,6 @@ elif nav_choice == "Коллаборативная фильтрация":
                         render_movie_card(m, rank=m.get("rank"), show_score="similarity")
 
 
-# -------------------------------------------------------------
-# РАЗДЕЛ 3: РЕКОМЕНДАЦИИ ПО КОНТЕНТУ (TF-IDF)
-# -------------------------------------------------------------
 elif nav_choice == "По контенту (TF-IDF)":
     st.markdown('<div class="page-title">Фильтрация по контенту (Content-Based)</div>', unsafe_allow_html=True)
     st.markdown(
@@ -338,9 +319,6 @@ elif nav_choice == "По контенту (TF-IDF)":
                     render_movie_card(m, rank=m.get("rank"), show_score="similarity")
 
 
-# -------------------------------------------------------------
-# РАЗДЕЛ 4: ПЕРСОНАЛЬНЫЕ РЕКОМЕНДАЦИИ (ГИБРИД SVD + CONTENT)
-# -------------------------------------------------------------
 elif nav_choice == "Персональные (SVD)":
     st.markdown('<div class="page-title">Персональные гибридные рекомендации</div>', unsafe_allow_html=True)
     st.markdown(
@@ -383,9 +361,6 @@ elif nav_choice == "Персональные (SVD)":
         st.warning("Выберите пользователя в верхней панели.")
 
 
-# -------------------------------------------------------------
-# РАЗДЕЛ 5: ОЦЕНКА ФИЛЬМА (БАЗА ДАННЫХ MYSQL)
-# -------------------------------------------------------------
 elif nav_choice == "Оценить фильм":
     st.markdown('<div class="page-title">Выставление оценки фильму (MySQL)</div>', unsafe_allow_html=True)
     st.markdown(
@@ -459,9 +434,6 @@ elif nav_choice == "Оценить фильм":
                     st.info("У этого пользователя пока нет сохраненных оценок.")
 
 
-# -------------------------------------------------------------
-# РАЗДЕЛ 6: ГРАФИКИ И АНАЛИТИКА (ВСЕ ДИАГРАММЫ СТОЛБИКАМИ)
-# -------------------------------------------------------------
 elif nav_choice == "Аналитика и Диаграммы":
     st.markdown('<div class="page-title">Аналитический дашборд (Столбчатые диаграммы)</div>', unsafe_allow_html=True)
     st.markdown(
@@ -469,35 +441,30 @@ elif nav_choice == "Аналитика и Диаграммы":
         unsafe_allow_html=True
     )
 
-    # 1. Dataset Sparsity & Overview
     summary_data, _ = call_api("/api/analytics/summary")
     if summary_data:
         render_dataset_overview_tab(summary_data)
 
     st.markdown("<hr style='margin: 1.5rem 0; border-color: #374151;'>", unsafe_allow_html=True)
 
-    # 2. Bar Charts for Distributions (Ratings & Genres)
     r_dist, _ = call_api("/api/analytics/ratings-distribution")
     g_dist, _ = call_api("/api/analytics/genres-distribution")
     render_distribution_charts(r_dist, g_dist)
 
     st.markdown("<hr style='margin: 1.5rem 0; border-color: #374151;'>", unsafe_allow_html=True)
 
-    # 3. Model Evaluation (Grouped Bar Charts for Errors and Quality)
     eval_data, _ = call_api("/api/analytics/model-metrics")
     if eval_data:
         render_model_evaluation_chart(eval_data)
 
     st.markdown("<hr style='margin: 1.5rem 0; border-color: #374151;'>", unsafe_allow_html=True)
 
-    # 4. SVD Scree Plot (Bar Chart of Variances)
     scree_data, _ = call_api("/api/analytics/svd-scree")
     if scree_data:
         render_svd_scree_chart(scree_data)
 
     st.markdown("<hr style='margin: 1.5rem 0; border-color: #374151;'>", unsafe_allow_html=True)
 
-    # 5. PCA Component Analysis & Top Similar Pairs (All as Bar Charts)
     col_v1, col_v2 = st.columns(2)
     with col_v1:
         pca_data, _ = call_api("/api/analytics/pca-projection")
@@ -510,9 +477,6 @@ elif nav_choice == "Аналитика и Диаграммы":
             render_similarity_heatmap(sim_data)
 
 
-# -------------------------------------------------------------
-# РАЗДЕЛ 7: ДОКУМЕНТАЦИЯ И API
-# -------------------------------------------------------------
 elif nav_choice == "Документация и API":
     st.markdown('<div class="page-title">Документация и спецификация API</div>', unsafe_allow_html=True)
     st.markdown(
